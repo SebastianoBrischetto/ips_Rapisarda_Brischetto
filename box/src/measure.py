@@ -3,7 +3,7 @@ import math
 import melopero_lsm9ds1 as mp
 import numpy as np
 
-import display
+from box.src import display
 
 
 # sensore
@@ -31,8 +31,8 @@ def set_sensor_odr(sensor, odr):
 
 def singola(sensor):
     try:
-        A = np.genfromtxt('config_files/matrix.txt', delimiter='\t')
-        b = np.genfromtxt('config_files/bias.txt', delimiter='\t')
+        A = np.genfromtxt('../config_files/matrix.txt', delimiter='\t')
+        b = np.genfromtxt('../config_files/bias.txt', delimiter='\t')
         date = np.zeros((0, 3))
         mag_measurements = sensor.get_mag()
         mx = mag_measurements[0]
@@ -65,8 +65,8 @@ def singola(sensor):
 
 def multi(sensor, num):
     try:
-        A = np.genfromtxt('config_files/matrix.txt', delimiter='\t')
-        b = np.genfromtxt('config_files/bias.txt', delimiter='\t')
+        A = np.genfromtxt('../config_files/matrix.txt', delimiter='\t')
+        b = np.genfromtxt('../config_files/bias.txt', delimiter='\t')
         date = np.zeros((0, 3))
         for k in range(num):
             mag_measurements = sensor.get_mag()

@@ -4,7 +4,7 @@
 sleep 3
 
 # Change directory to the desired location
-cd /home/pi/Desktop/ips/box
+cd /home/pi/Desktop/ips/box/src
 
 # Activate the virtual environment and run the Python script
 .venv/bin/python3 home.py

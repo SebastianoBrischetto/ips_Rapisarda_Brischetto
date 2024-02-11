@@ -2,7 +2,7 @@ import time
 
 import led
 
-import display
+from box.src import display
 
 if __name__ == "__main__":
     led.rosso('ON')

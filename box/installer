@@ -17,7 +17,7 @@ source .venv/bin/activate
 printf "#!/bin/sh
 sleep 3
 cd %s
-.venv/bin/python3 home.py
+.venv/bin/python3 src/home.py
 exit 0" "$pathLocale" > scriptStarter
 
 # Create systemd service

@@ -23,15 +23,7 @@ from flask import Flask, render_template, request, session, jsonify, send_file
 from flask_sslify import SSLify
 from werkzeug.utils import secure_filename
 
-import ble
-import cal
-import configf
-import dati
-import display
-import heatmap
-import measure
-import sincro
-import wifis
+from box.src import cal, ble, dati, display, configf, sincro, measure, wifis, heatmap
 
 
 def randStr(chars=string.ascii_uppercase + string.digits, N=12):
@@ -56,8 +48,8 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 nume = 0
 g_stop_calibration_requested = None
 
-calibration_raw_data_output_filename = "config_files/mag.txt"
-calibration_calibrated_data_output_filename = "config_files/calibration_calibrated_data.txt"
+calibration_raw_data_output_filename = "../config_files/mag.txt"
+calibration_calibrated_data_output_filename = "../config_files/calibration_calibrated_data.txt"
 g_box_config = None
 
 
@@ -208,8 +200,8 @@ def nuova_calibrazione_thread_func(total_intensity, sample_frequency):
     func.main(ctypes.c_float(total_intensity))
 
     # Leggi A e b dai rispettivi file
-    A = np.genfromtxt('config_files/matrix.txt', delimiter='\t')
-    b = np.genfromtxt('config_files/bias.txt', delimiter='\t')
+    A = np.genfromtxt('../config_files/matrix.txt', delimiter='\t')
+    b = np.genfromtxt('../config_files/bias.txt', delimiter='\t')
 
     # Dopo aver acquisito i dati grezzi in 'raw_data', usa A e b per calibrare
     calibrated_data = np.zeros((N, 3), dtype='float')
@@ -325,24 +317,24 @@ def calibra():
         ti = float(datare['ti'])
         # if(k=='b'):
         if (cod == 0):
-            with open('config_files/cod.txt', mode='r') as f:
+            with open('../config_files/cod.txt', mode='r') as f:
                 codn = int(f.read())
             f.close()
             if codn != 0:
                 print("Calibrazione già in corso")
                 return jsonify({"codi": -22, "mess": "Calibrazione già in corso"})
             if (ti != -9):
-                with open("config_files/ti.txt", mode='w') as f:
+                with open("../config_files/ti.txt", mode='w') as f:
                     f.write(str(ti))
                 f.close()
-            with open("config_files/cod.txt", mode='w') as f:
+            with open("../config_files/cod.txt", mode='w') as f:
                 f.write(str('1'))
             f.close()
             x = threading.Thread(target=ta, args=(nume,))
             x.start()
             return jsonify({"codi": 1})
         elif (cod == 33):
-            with open("config_files/cod.txt", mode='w') as f:
+            with open("../config_files/cod.txt", mode='w') as f:
                 f.write(str('0'))
             f.close()
             current_GMT = time.gmtime()
@@ -352,7 +344,7 @@ def calibra():
             finalresponse = {"codi": -14, "s": nf, "statuscalibration": "ok"}
             return jsonify(finalresponse)
         elif (cod == -11):
-            with open("config_files/cod.txt", mode='w') as f:
+            with open("../config_files/cod.txt", mode='w') as f:
                 f.write(str('0'))
             f.close()
             try:
@@ -361,7 +353,7 @@ def calibra():
                 print("Thread non trovato!")
             return jsonify({"codi": 0})
         else:
-            with open('config_files/cod.txt', mode='r') as f:
+            with open('../config_files/cod.txt', mode='r') as f:
                 codn = int(f.read())
             f.close()
             return jsonify({"codi": codn})
@@ -372,7 +364,7 @@ def ta(nume):
     print(rawData)
     # if asse == 'X':
     rawData = np.append(rawData, cal.asse(nume, '1', sensor), axis=0)
-    with open('config_files/cod.txt', mode='r') as f:
+    with open('../config_files/cod.txt', mode='r') as f:
         codn = int(f.read())
     f.close()
     print(codn)
@@ -381,15 +373,15 @@ def ta(nume):
         # time.sleep(1.5)
         return -1
     cal.save(rawData, nume, 'X')
-    with open("config_files/cod.txt", mode='w') as f:
+    with open("../config_files/cod.txt", mode='w') as f:
         f.write(str('10'))
     f.close()
     time.sleep(1)
-    with open("config_files/cod.txt", mode='w') as f:
+    with open("../config_files/cod.txt", mode='w') as f:
         f.write(str('2'))
     f.close()
     rawData = np.append(rawData, cal.asse(nume, '2', sensor), axis=0)
-    with open('config_files/cod.txt', mode='r') as f:
+    with open('../config_files/cod.txt', mode='r') as f:
         codn = int(f.read())
     f.close()
     print(codn)
@@ -398,15 +390,15 @@ def ta(nume):
         # time.sleep(1.5)
         return -1
     cal.save(rawData, nume, 'Y')
-    with open("config_files/cod.txt", mode='w') as f:
+    with open("../config_files/cod.txt", mode='w') as f:
         f.write(str('20'))
     f.close()
     time.sleep(1)
-    with open("config_files/cod.txt", mode='w') as f:
+    with open("../config_files/cod.txt", mode='w') as f:
         f.write(str('3'))
     f.close()
     rawData = np.append(rawData, cal.asse(nume, '3', sensor), axis=0)
-    with open('config_files/cod.txt', mode='r') as f:
+    with open('../config_files/cod.txt', mode='r') as f:
         codn = int(f.read())
     f.close()
     print(codn)
@@ -414,7 +406,7 @@ def ta(nume):
         print("Annulla........")
         # time.sleep(1.5)
         return -1
-    with open("config_files/cod.txt", mode='w') as f:
+    with open("../config_files/cod.txt", mode='w') as f:
         f.write(str('30'))
     f.close()
     cal.save(rawData, nume,
@@ -426,14 +418,14 @@ def vta(nume, asse):
     print(rawData)
     if asse == 'X':
         rawData = np.append(rawData, cal.asse(nume, '1', sensor), axis=0)
-        with open("config_files/cod.txt", mode='w') as f:
+        with open("../config_files/cod.txt", mode='w') as f:
             f.write(str('10'))
         f.close()
         cal.save(rawData, nume, asse)
 
     if asse == 'Y':
         rawData = np.append(rawData, cal.asse(nume, '2', sensor), axis=0)
-        with open("config_files/cod.txt", mode='w') as f:
+        with open("../config_files/cod.txt", mode='w') as f:
             f.write(str('20'))
         f.close()
         cal.save(rawData, nume, asse)
@@ -441,7 +433,7 @@ def vta(nume, asse):
     if asse == 'Z':
         rawData = np.append(rawData, cal.asse(nume, '3', sensor), axis=0)
 
-        with open("config_files/cod.txt", mode='w') as f:
+        with open("../config_files/cod.txt", mode='w') as f:
             f.write(str('30'))
         f.close()
         cal.save(rawData, nume, asse)

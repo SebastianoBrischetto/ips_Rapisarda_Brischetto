@@ -132,7 +132,7 @@ def load_conf():
 
 
 def save_conf(a, b, c, d, e, f, g):
-    config_file = 'static/config_box/config.txt'
+    config_file = '../static/config_box/config.txt'
     with open(config_file, mode='w') as ff:
         writer = csv.writer(ff, delimiter='\t')
         writer.writerow(['odr', a])
