@@ -630,7 +630,7 @@ def dwmisu():
     return render_template('dwmisu.html')
 
 
-def uploadFile():
+def uploadFile(app):
     # Upload file flask
 
     uploaded_img = request.files['mappa']
@@ -840,7 +840,7 @@ def setup_routes(app):
     app.add_url_rule("/datiremoto", "elencodatiremoto", elencodatiremoto)
     app.add_url_rule("/datx", "datx", datx)
     app.add_url_rule("/dwmisu", "dwmisu", dwmisu)
-    app.add_url_rule("/meas", "uploadFile", uploadFile, methods=["POST"])
+    app.add_url_rule("/meas", "uploadFile", lambda: uploadFile(app), methods=["POST"])
     app.add_url_rule("/markers", "get_markers", get_markers)
     app.add_url_rule("/restart", "restart", restart)
     app.add_url_rule("/edit", "edit", edit)
