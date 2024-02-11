@@ -2,55 +2,33 @@ import os
 import sys
 import setup_lib
 
+def main():
+    if os.geteuid() != 0:
+        sys.exit('You need root access to install!')
 
-if os.getuid():
-    sys.exit('You need root access to install!')
+    print("\n\n###################################")
+    print("###  Indoor Positioning System  ###")
+    print("###   Indoor Navigation System  ###")
+    print("### Based on Geomagnetic Field  ###")
+    print("###    Box di Acquisizione      ###")
+    print("###################################\n")
 
-print()
-print()
-print("###################################")
-print("###  Indoor Positioning System  ###")
-print("###   Indoor Navigation System  ###")
-print("### Based on Geomagnetic Field  ###")
-print("###    Box di Acquisizione      ###")
-print("###################################")
-print()
-install_ans = input("Sei pronto per eseguire il commit delle modifiche al sistema? [y/N]: ")
+    install_ans = input("Sei pronto per eseguire il commit delle modifiche al sistema? [y/N]: ")
 
-if(install_ans.lower() == 'y'):
-	setup_lib.install_prereqs()
-	setup_lib.copy_configs()
-else:
-	print()
-	print()
-	print("===================================================")
-	print("---------------------------------------------------")
-	print()
-	print("IPS Installazione Annullata. Nothing changed...")
-	print()
-	print("---------------------------------------------------")
-	print("===================================================")
-	print()
-	print()
-	sys.exit()
+    if install_ans.lower() == 'y':
+        setup_lib.install_prereqs()
+        setup_lib.copy_configs()
+    else:
+        print("\n\n===================================================")
+        print("---------------------------------------------------")
+        print("\nIPS Installazione Annullata. Nothing changed...\n")
+        print("---------------------------------------------------")
+        print("===================================================\n")
+        sys.exit()
 
-print()
-print()
-print("#####################################")
-print("##### Indoor Positioning System Installazione Completata  #####")
-print("#####################################")
-print()
-print()
-#print("Installare plugin WiFi per la configurazione della rete")
-#wifi_ans = input("Vuoi farlo adesso? [y/N]: ")
-#print()
-#print()
+    print("\n\n#####################################")
+    print("##### Indoor Positioning System Installazione Completata  #####")
+    print("#####################################\n")
 
-#if wifi_ans.lower() == 'y':
-#    os.system('cd wifi')
-#    os.system('sudo python3 wifi/initial_setup.py')
-    
-
-print()
-print()
-
+if __name__ == "__main__":
+    main()

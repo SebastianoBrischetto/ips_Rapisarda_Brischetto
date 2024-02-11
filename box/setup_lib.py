@@ -1,40 +1,24 @@
 import os
 
 def install_prereqs():
-	os.system('sudo apt-get install python3-pip libglib2.0-dev') 
-	os.system('apt update')
-
-	os.system('apt install python3 python3-rpi.gpio python3-pip -y')
-	print("Installing Flask web server...")
-	os.system('sudo .venv/bin/pip install flask ')
-	print("Installing library...")
-	os.system('sudo apt install gcc  ')
-	os.system('sudo .venv/bin/pip install numpy  ')
-	os.system('sudo .venv/bin/pip install flask_sslify  ')
-
-	
-	os.system('sudo .venv/bin/pip install keyboard  ')
-	os.system('sudo .venv/bin/pip install melopero_lsm9ds1  ')
-	os.system('sudo .venv/bin/pip install requests  ')
-	os.system('sudo .venv/bin/pip install wifi  ')
-	os.system('sudo .venv/bin/pip install bluepy  ')
-	os.system('sudo .venv/bin/pip install GPIO  ')
-	os.system('sudo .venv/bin/pip install RPi.GPIO  ')
-	os.system('sudo .venv/bin/pip install pyOpenSSL  ')
-	os.system('sudo .venv/bin/pip install pandas  ')
-	os.system('sudo .venv/bin/pip install datetime  ')
-	os.system('sudo .venv/bin/pip install pillow  ')
-	os.system('sudo .venv/bin/pip install scipy  ')
-	os.system('sudo .venv/bin/pip install luma.core  ')
-	os.system('sudo .venv/bin/pip install luma.oled  ')
-	os.system('sudo .venv/bin/pip install matplotlib  ')
-	#os.system('clear')
-	#testare completezza librerie
+    print("Installing prerequisites...")
+    os.system('sudo apt-get install python3-pip libglib2.0-dev')
+    os.system('sudo apt update')
+    os.system('sudo apt install python3 python3-rpi.gpio python3-pip -y')
+    print("Installing Flask web server...")
+    os.system('sudo .venv/bin/pip install flask')
+    print("Installing required libraries...")
+    os.system('sudo apt install gcc')
+    os.system('sudo .venv/bin/pip install numpy flask_sslify keyboard melopero_lsm9ds1 requests wifi bluepy GPIO RPi.GPIO pyOpenSSL pandas pillow scipy luma.core luma.oled matplotlib')
 
 def copy_configs():
-	os.system('sudo rm -r /lib/ips_project')
-	os.system('sudo rm -r /etc/ips_project')
-	os.system('sudo mkdir /usr/lib/ips_project')
-	os.system('sudo mkdir /etc/ips_project')
-	os.system('sudo cp -a * /usr/lib/ips_project/')
-	
+    print("Copying configuration files...")
+    os.system('sudo rm -r /lib/ips_project')
+    os.system('sudo rm -r /etc/ips_project')
+    os.system('sudo mkdir /usr/lib/ips_project')
+    os.system('sudo mkdir /etc/ips_project')
+    os.system('sudo cp -a * /usr/lib/ips_project/')
+
+if __name__ == "__main__":
+    install_prereqs()
+    copy_configs()
